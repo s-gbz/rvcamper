@@ -1,5 +1,6 @@
 package de.grilborzer.rvcamper.controller;
 
+import de.grilborzer.rvcamper.model.Booking;
 import de.grilborzer.rvcamper.service.BookingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +25,7 @@ public class BookingController {
     }
 
     @PostMapping("/{checkin}/{checkout}")
-    void createBooking(@PathVariable LocalDate checkin, @PathVariable LocalDate checkout) {
-        bookingService.createBooking(checkin, checkout);
+    Booking createBooking(@PathVariable LocalDate checkin, @PathVariable LocalDate checkout) {
+        return bookingService.createBooking(checkin, checkout);
     }
 }

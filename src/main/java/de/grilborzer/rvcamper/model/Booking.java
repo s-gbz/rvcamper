@@ -1,5 +1,6 @@
 package de.grilborzer.rvcamper.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,5 +23,6 @@ public final class Booking {
     private LocalDate checkout;
     @OneToOne
     @JoinColumn(name = "rvSpace_id", referencedColumnName = "id")
+    @JsonManagedReference
     private RvSpace rvSpace;
 }

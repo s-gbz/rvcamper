@@ -14,6 +14,7 @@ import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @Testcontainers
@@ -50,6 +51,18 @@ class BookingControllerIntegrationTest {
         mockMvc.perform(get(BASE_URL + "/" + checkin + "/" + checkout))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isEmpty()
+                );
+    }
+
+    @Test
+    void createBooking_shouldReturnBookingWithIdsSetInBookingAndRvSpace_whenRequestIsValid() throws Exception {
+        LocalDate checkin = LocalDate.of(2024, 1, 1);
+        LocalDate checkout = LocalDate.of(2024, 1, 8);
+
+        mockMvc.perform(post(BASE_URL + "/" + checkin + "/" + checkout))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1L))
+                .andExpect(jsonPath("$.rvSpace.id").value(1L)
                 );
     }
 }

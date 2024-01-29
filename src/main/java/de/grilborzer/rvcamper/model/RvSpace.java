@@ -1,23 +1,23 @@
 package de.grilborzer.rvcamper.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 @Entity
 @Data
 @AllArgsConstructor
 @RequiredArgsConstructor
-@Table(name = "rvSpace")
 //@NoArgsConstructor
 public final class RvSpace implements CampingSpace {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
-    @OneToOne(mappedBy = "rvSpace")
+    @OneToOne
+    @JsonBackReference
     private Booking booking;
 
 }
