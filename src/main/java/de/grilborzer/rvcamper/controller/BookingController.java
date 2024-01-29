@@ -16,9 +16,9 @@ public class BookingController {
 
     private final BookingService bookingService;
 
-    @GetMapping("/{startDate}/{endDate}")
+    @GetMapping("/{checkin}/{checkout}")
     List<LocalDate> getAvailableRvSpacesBetweenDates
-            (@PathVariable LocalDate startDate, @PathVariable LocalDate endDate) {
+            (@PathVariable LocalDate checkin, @PathVariable LocalDate checkout) {
         // Repository liefert gebuchte Zeiten
         // Service liefert die Inverse davon
         return new ArrayList<>();
