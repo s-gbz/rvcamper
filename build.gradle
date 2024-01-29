@@ -25,7 +25,9 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-testcontainers'
     testImplementation "org.testcontainers:postgresql"
     testImplementation 'org.testcontainers:junit-jupiter'
-}
+
+    compileOnly 'org.projectlombok:lombok:1.18.20'
+    annotationProcessor 'org.projectlombok:lombok:1.18.20'}
 
 tasks.named('test') {
     useJUnitPlatform()
