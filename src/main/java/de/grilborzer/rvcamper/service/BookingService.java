@@ -20,10 +20,8 @@ public class BookingService {
     private final RvSpaceRepository rvSpaceRepository;
 
     public Booking createBooking(LocalDate checkin, LocalDate checkout) {
-
-        RvSpace savedSpace = rvSpaceRepository.save(new RvSpace());
-        Booking savedBooking = bookingRepository.save(new Booking(null, checkin, checkout, savedSpace, null));
-        RvSpace savedSpaceWithBookingIdSet = new RvSpace(savedSpace.getId(), savedBooking);
+        Booking savedBooking = bookingRepository.save(new Booking(null, checkin, checkout, new RvSpace(), null));
+        RvSpace savedSpaceWithBookingIdSet = new RvSpace(savedBooking.getRvSpace().getId(), savedBooking);
 
         rvSpaceRepository.save(savedSpaceWithBookingIdSet);
 
