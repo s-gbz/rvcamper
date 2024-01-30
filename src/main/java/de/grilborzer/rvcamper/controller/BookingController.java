@@ -1,6 +1,7 @@
 package de.grilborzer.rvcamper.controller;
 
 import de.grilborzer.rvcamper.model.Booking;
+import de.grilborzer.rvcamper.model.ExtraServiceRequest;
 import de.grilborzer.rvcamper.service.BookingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -27,5 +28,10 @@ public class BookingController {
     @PostMapping("/{checkin}/{checkout}")
     Booking createBooking(@PathVariable LocalDate checkin, @PathVariable LocalDate checkout) {
         return bookingService.createBooking(checkin, checkout);
+    }
+
+    @PutMapping("/{bookingId}")
+    Booking addExtraServiceToBooking(@PathVariable Long bookingId, @RequestBody ExtraServiceRequest extraService) {
+        return bookingService.addExtraServiceToBooking(bookingId, extraService.extraService());
     }
 }

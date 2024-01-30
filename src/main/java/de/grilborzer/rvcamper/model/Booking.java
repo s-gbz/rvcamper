@@ -4,16 +4,15 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Data
 @RequiredArgsConstructor
 @AllArgsConstructor
-//@NoArgsConstructor
 public final class Booking {
 
     @Id
@@ -25,4 +24,10 @@ public final class Booking {
     @JoinColumn(name = "rvSpace_id", referencedColumnName = "id")
     @JsonManagedReference
     private RvSpace rvSpace;
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<ExtraServiceToBook> extraServices;
+
+    public Booking withExtraServices(List<ExtraServiceToBook> extraServices) {
+        return new Booking(this.id, this.checkin, this.checkout, this.rvSpace, extraServices);
+    }
 }

@@ -1,22 +1,26 @@
 package de.grilborzer.rvcamper.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Entity
 @Data
-@AllArgsConstructor
 @RequiredArgsConstructor
-public final class RvSpace {
+@AllArgsConstructor
+public class ExtraServiceToBook {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
-    @OneToOne
-    @JsonBackReference
+    private ExtraServiceType serviceType;
+    @ManyToOne
+    @Transient
+    @JsonIgnore
     private Booking booking;
-
 }
+
