@@ -6,6 +6,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import de.grilborzer.rvcamper.model.Booking;
 import de.grilborzer.rvcamper.model.ExtraServiceRequest;
 import de.grilborzer.rvcamper.model.ExtraServiceType;
+import de.grilborzer.rvcamper.repository.RvSpaceRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -18,24 +19,26 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.LocalDate;
-import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Testcontainers
 @SpringBootTest
 @AutoConfigureMockMvc
 class BookingControllerIntegrationTest {
 
-    @Autowired
-    MockMvc mockMvc;
-
     // https://github.com/testcontainers/testcontainers-java-spring-boot-quickstart#46-using-spring-boot-310-serviceconnection
     @Container
     @ServiceConnection
     static final PostgreSQLContainer postgreSQLContainer = new PostgreSQLContainer("postgres:12.17-alpine3.19");
 
+    @Autowired
+    MockMvc mockMvc;
+    @Autowired
+    private RvSpaceRepository rvSpaceRepository;
     private final ObjectMapper objectMapper = JsonMapper.builder()
             .addModule(new JavaTimeModule())
             .build();
@@ -67,16 +70,22 @@ class BookingControllerIntegrationTest {
     void createBooking_shouldReturnBookingWithIdsSetInBookingAndRvSpace_whenRequestIsValid() throws Exception {
         LocalDate checkin = LocalDate.of(2024, 1, 1);
         LocalDate checkout = LocalDate.of(2024, 1, 8);
+        Long expectedFirstId = 1L;
 
         mockMvc.perform(post(BASE_URL + checkin + "/" + checkout))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.rvSpace.id").value(1L)
+                .andExpect(jsonPath("$.id").value(expectedFirstId))
+                .andExpect(jsonPath("$.rvSpace.id").value(expectedFirstId)
                 );
+
+        rvSpaceRepository.findById(expectedFirstId).ifPresent(rvSpace -> {
+            assertNotNull(rvSpace.getBooking());
+            assertNotNull(rvSpace.getBooking().getId());
+        });
     }
 
     @Test
-    void addExtraServiceToBooking_shouldAddSelectedServiceToExistingBookingAndReturnUpdatedBooking_whenRequestIsValid() throws Exception {
+    void addExtraServiceToBooking_shouldAddSelectedServiceToExistingBookingAndReturnUpdatedBooking_afterCreateBookingRequest() throws Exception {
         LocalDate checkin = LocalDate.of(2024, 1, 1);
         LocalDate checkout = LocalDate.of(2024, 1, 8);
 

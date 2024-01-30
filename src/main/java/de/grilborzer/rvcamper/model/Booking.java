@@ -20,11 +20,12 @@ public final class Booking {
     private Long id;
     private LocalDate checkin;
     private LocalDate checkout;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL) // Is cascade = CascadeType.ALL required or beneficial here?
     @JoinColumn(name = "rvSpace_id", referencedColumnName = "id")
     @JsonManagedReference
     private RvSpace rvSpace;
     @OneToMany(cascade = CascadeType.ALL)
+    // No need to persist this field separately, because of the CascadeType
     private List<ExtraServiceToBook> extraServices;
 
     public Booking withExtraServices(List<ExtraServiceToBook> extraServices) {
